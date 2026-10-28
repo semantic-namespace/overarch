@@ -1,13 +1,13 @@
-;; Tasks over the banking example, from this directory. meta-source and
-;; atlas are pinned to their branches with the Overarch pack and
-;; :ontology/from until those are merged.
+;; Tasks over the banking example, from this directory. atlas is pinned
+;; to main; meta-source to its branch with the Overarch pack until that is
+;; merged.
 {:paths ["."]
  :deps {io.github.semantic-namespace/meta-source {:git/url "https://github.com/semantic-namespace/meta-source"
                                                   :git/sha "6c3bfbc825dbba319cfa31e05e8bf6af3a35944e"}
         io.github.semantic-namespace/atlas {:git/url "https://github.com/semantic-namespace/atlas"
-                                            :git/sha "302439121a20dd88620297f382f9a86879968633" :deps/root "core"}
+                                            :git/sha "073b2ac31fac84404b7022a113bf61934f9596c2" :deps/root "core"}
         io.github.semantic-namespace/atlas-store {:git/url "https://github.com/semantic-namespace/atlas"
-                                                  :git/sha "302439121a20dd88620297f382f9a86879968633" :deps/root "store"}}
+                                                  :git/sha "073b2ac31fac84404b7022a113bf61934f9596c2" :deps/root "store"}}
  :tasks {atlas-store {:doc "Writes the merged entities (Overarch's model and atlas's facts) as atlas's registry into the git store ../../.atlas-store, one commit per change, for `bb registry`"
                       :requires ([export])
                       :task (export/-main)}}}
