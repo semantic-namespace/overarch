@@ -57,3 +57,35 @@ The check reports three gaps in the example:
 
 and, as info, the relations these facts state that the model doesn't draw
 (its domain elements have none).
+
+## atlas's registry, from both
+
+In this directory, `bb atlas-store` writes what meta-source merges as
+atlas's registry into a git store (`../../.atlas-store`, one commit per
+change). atlas's own questions then work across the model and the facts,
+with babashka:
+
+```sh
+bb atlas-store
+bb registry blast-radius ../../.atlas-store HEAD :banking.mainframe/mainframe-banking-system
+bb registry consumers-of ../../.atlas-store HEAD :auth/token
+bb registry by-aspect ../../.atlas-store HEAD :domain/auth
+```
+
+Changing the mainframe system reaches the facade and the accounts summary
+(the architecture), the account aggregate and both commands (the domain),
+and both use cases.
+
+The same questions as an MCP server over stdio, for an LLM
+(`by_aspect`, `entity_detail`, `producers_of`, `consumers_of`,
+`dependencies`, `dependents`, `blast_radius`, `trace_causes`, `overview`),
+each call answered at the store ref it names:
+
+```sh
+bb registry-mcp ../../.atlas-store
+```
+
+Claude Code with only this server's tools, asked what a change to the
+mainframe reaches and what is about authentication:
+
+![Claude Code asking atlas's registry about the banking example](images/banking-atlas-mcp.gif)
