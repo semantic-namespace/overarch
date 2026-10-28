@@ -47,8 +47,11 @@ meta-source data :auth/token
 The check reports three gaps in the example:
 
 - nothing reacts to `:banking.domain/account-created-event`;
-- `accounts-summary-controller` reads the auth token and never reaches the
-  security component;
+- `accounts-summary-controller` reads the auth token and declares no
+  dependency, direct or through what it depends on, on the security
+  component: nothing it declares checks the token. (atlas's effective
+  dependencies, which follow data too, do reach it, through the sign-in
+  controller that produces the token.)
 - the "transfer money" use case is served by no API endpoint: the model has
   none for transfers.
 
