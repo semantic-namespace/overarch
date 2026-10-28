@@ -7,11 +7,11 @@
  :deps {io.github.semantic-namespace/meta-source {:git/url "https://github.com/semantic-namespace/meta-source"
                                                   :git/sha "6c3bfbc825dbba319cfa31e05e8bf6af3a35944e"}
         io.github.semantic-namespace/atlas {:git/url "https://github.com/semantic-namespace/atlas"
-                                            :git/sha "6435a97aaa2ad53e26a35558fe10f0645d1d5240" :deps/root "core"}
+                                            :git/sha "761b89409335ec860b4e31c60c72bc149c8822f3" :deps/root "core"}
         io.github.semantic-namespace/atlas-store {:git/url "https://github.com/semantic-namespace/atlas"
-                                                  :git/sha "6435a97aaa2ad53e26a35558fe10f0645d1d5240" :deps/root "store"}
+                                                  :git/sha "761b89409335ec860b4e31c60c72bc149c8822f3" :deps/root "store"}
         io.github.semantic-namespace/atlas-review {:git/url "https://github.com/semantic-namespace/atlas"
-                                                   :git/sha "6435a97aaa2ad53e26a35558fe10f0645d1d5240" :deps/root "review"}}
+                                                   :git/sha "761b89409335ec860b4e31c60c72bc149c8822f3" :deps/root "review"}}
  :tasks {atlas-store {:doc "Writes the merged entities (Overarch's model and atlas's facts) as atlas's registry into the git store ../../.atlas-store, one commit per change"
                       :requires ([export])
                       :task (export/-main)}
