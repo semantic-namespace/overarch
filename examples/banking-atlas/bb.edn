@@ -1,0 +1,10 @@
+;; Local tasks over the banking example, from this directory. The paths
+;; are this machine's checkouts until meta-source's Overarch pack and
+;; atlas's :ontology/from are merged.
+{:paths ["."]
+ :deps {io.github.semantic-namespace/meta-source {:local/root "/home/tangrammer/git/semantic-namespace/meta-source-overarch"}
+        io.github.semantic-namespace/atlas {:local/root "/home/tangrammer/git/semantic-namespace/atlas-types-from/core"}
+        io.github.semantic-namespace/atlas-store {:local/root "/home/tangrammer/git/semantic-namespace/atlas-types-from/store"}}
+ :tasks {atlas-store {:doc "Writes the merged entities (Overarch's model and atlas's facts) as atlas's registry into the git store ../../.atlas-store, one commit per change, for `bb registry`"
+                      :requires ([export])
+                      :task (export/-main)}}}
