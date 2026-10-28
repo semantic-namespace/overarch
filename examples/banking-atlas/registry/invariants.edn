@@ -45,7 +45,7 @@
  {:atlas/type :atlas/invariant
   :atlas/aspects #{:meta/tokens-are-checked}
   :invariant/severity :warning
-  :invariant/rule {:doc "An endpoint reading the auth token reaches the security component"
+  :invariant/rule {:doc "An endpoint reading the token reaches the security component"
                    :severity :warning
                    :when {:= {:atlas/type :atlas/interface-endpoint :interface-endpoint/context :auth/token}}
                    :require [{:reaches {:some {:id :banking.internet-banking.api-application/security-component}}}]}}}
