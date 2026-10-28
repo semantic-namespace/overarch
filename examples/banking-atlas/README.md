@@ -54,20 +54,3 @@ The check reports three gaps in the example:
 
 and, as info, the relations these facts state that the model doesn't draw
 (its domain elements have none).
-
-## atlas's registry, from both
-
-`bb atlas-store`, in this directory, writes what meta-source merges as
-atlas's registry into a git store (`../../.atlas-store`, one commit per
-change). atlas's own questions then work across the model and the facts,
-with babashka:
-
-```sh
-bb --config <atlas>/bb.edn registry blast-radius ../../.atlas-store HEAD :banking.mainframe/mainframe-banking-system
-bb --config <atlas>/bb.edn registry consumers-of ../../.atlas-store HEAD :auth/token
-bb --config <atlas>/bb.edn registry by-aspect ../../.atlas-store HEAD :domain/auth
-```
-
-Changing the mainframe system reaches the facade and the accounts summary
-(the architecture), the account aggregate and both commands (the domain),
-and both use cases.
