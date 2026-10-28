@@ -29,8 +29,14 @@ invariants, and atlas's compound identity, checked as the EDN is edited.
 ## Run it
 
 With [meta-source](https://github.com/semantic-namespace/meta-source)
-(babashka; nothing is loaded), from the repository's root, where
-`meta-source.edn` is:
+(babashka; nothing is loaded). Its Overarch pack isn't released yet, so
+install it from its branch:
+
+```sh
+bbin install io.github.semantic-namespace/meta-source --git/sha 6c3bfbc825dbba319cfa31e05e8bf6af3a35944e
+```
+
+then, from the repository's root, where `meta-source.edn` is:
 
 ```sh
 meta-source check --brief
@@ -65,11 +71,3 @@ bb --config <atlas>/bb.edn registry by-aspect ../../.atlas-store HEAD :domain/au
 Changing the mainframe system reaches the facade and the accounts summary
 (the architecture), the account aggregate and both commands (the domain),
 and both use cases.
-
-The same questions as an MCP server over stdio, for an LLM, also with
-babashka (`by_aspect`, `entity_detail`, `producers_of`, `consumers_of`,
-`dependencies`, `dependents`, `blast_radius`, `trace_causes`, `overview`):
-
-```sh
-bb --config <atlas>/bb.edn registry-mcp ../../.atlas-store
-```
