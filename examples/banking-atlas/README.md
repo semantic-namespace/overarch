@@ -21,6 +21,11 @@ about, reads, returns and depends on.
   the merged entities, so a rule can use atlas's facts and Overarch's
   together ("an aggregate is kept by a `:system` or `:container`").
 
+In the editor, with meta-source's Emacs mode: one entity per id, the
+invariants, and atlas's compound identity, checked as the EDN is edited.
+
+![The banking example with atlas facts, in Emacs](images/banking-atlas.gif)
+
 ## Run it
 
 With [meta-source](https://github.com/semantic-namespace/meta-source)
