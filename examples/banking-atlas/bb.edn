@@ -1,0 +1,23 @@
+;; Tasks over the banking example, from this directory: the merged
+;; entities as atlas's registry in a git store, and atlas's questions over
+;; it, as a CLI and an MCP server. atlas is pinned to its branch with the
+;; MCP server (feat/registry-mcp), meta-source to its branch with the
+;; Overarch pack, until those are merged.
+{:paths ["."]
+ :deps {io.github.semantic-namespace/meta-source {:git/url "https://github.com/semantic-namespace/meta-source"
+                                                  :git/sha "6c3bfbc825dbba319cfa31e05e8bf6af3a35944e"}
+        io.github.semantic-namespace/atlas {:git/url "https://github.com/semantic-namespace/atlas"
+                                            :git/sha "6435a97aaa2ad53e26a35558fe10f0645d1d5240" :deps/root "core"}
+        io.github.semantic-namespace/atlas-store {:git/url "https://github.com/semantic-namespace/atlas"
+                                                  :git/sha "6435a97aaa2ad53e26a35558fe10f0645d1d5240" :deps/root "store"}
+        io.github.semantic-namespace/atlas-review {:git/url "https://github.com/semantic-namespace/atlas"
+                                                   :git/sha "6435a97aaa2ad53e26a35558fe10f0645d1d5240" :deps/root "review"}}
+ :tasks {atlas-store {:doc "Writes the merged entities (Overarch's model and atlas's facts) as atlas's registry into the git store ../../.atlas-store, one commit per change"
+                      :requires ([export])
+                      :task (export/-main)}
+         registry {:doc "atlas's registry questions over a store: bb registry <command> ../../.atlas-store <ref> [args]"
+                   :requires ([atlas.review.cli :as cli])
+                   :task (apply cli/-main *command-line-args*)}
+         registry-mcp {:doc "The same questions as an MCP server over stdio: bb registry-mcp ../../.atlas-store"
+                       :requires ([atlas.review.mcp :as mcp])
+                       :task (apply mcp/-main *command-line-args*)}}}
