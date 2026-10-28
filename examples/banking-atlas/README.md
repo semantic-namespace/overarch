@@ -81,3 +81,8 @@ each call answered at the store ref it names:
 ```sh
 bb registry-mcp ../../.atlas-store
 ```
+
+Claude Code with only this server's tools, asked what a change to the
+mainframe reaches and what is about authentication:
+
+![Claude Code asking atlas's registry about the banking example](images/banking-atlas-mcp.gif)
