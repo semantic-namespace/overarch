@@ -6,5 +6,5 @@
  :packs {atlas.meta-source/pack {}
          :overarch {:models ["examples/banking/model.edn" "examples/banking/views.edn"]}}
  :deps {io.github.semantic-namespace/atlas
-        {:git/url "https://github.com/semantic-namespace/atlas"
-         :git/sha "3275693460b9482ceebd51b39d634a76ce0a8e3e" :deps/root "core"}}}
+        ;; atlas's branch feat/meta-source-types-from (:ontology/from), until it's merged
+        {:local/root "/home/tangrammer/git/semantic-namespace/atlas-types-from/core"}}}

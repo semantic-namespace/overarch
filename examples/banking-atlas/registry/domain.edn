@@ -8,24 +8,28 @@
  {:atlas/type :atlas/ontology
   :atlas/aspects #{:ddd/aggregate}
   :ontology/for :ddd/aggregate
+  :ontology/from {:overarch/el :aggregate}
   :ontology/keys [:aggregate/kept-by]}
 
  :ddd/command
  {:atlas/type :atlas/ontology
   :atlas/aspects #{:ddd/command}
   :ontology/for :ddd/command
+  :ontology/from {:overarch/el :command}
   :ontology/keys [:command/targets :command/emits]}
 
  :ddd/domain-event
  {:atlas/type :atlas/ontology
   :atlas/aspects #{:ddd/domain-event}
   :ontology/for :ddd/domain-event
+  :ontology/from {:overarch/el :domain-event}
   :ontology/keys []}
 
  :ddd/policy
  {:atlas/type :atlas/ontology
   :atlas/aspects #{:ddd/policy}
   :ontology/for :ddd/policy
+  :ontology/from {:overarch/el :policy}
   :ontology/keys [:policy/reacts-to]}
 
  :type-ref/aggregate-kept-by
@@ -60,34 +64,29 @@
   :type-ref/datalog-verb :ddd/reacts-to
   :type-ref/cardinality :db.cardinality/many}
 
- ;; ---- Overarch's domain elements, connected
+ ;; ---- Overarch's domain elements, connected: their type is the
+ ;; ontology's whose :ontology/from their :overarch/el is
  :banking.domain/account-aggregate
- {:atlas/type :ddd/aggregate
-  :atlas/aspects #{:domain/accounts}
+ {:atlas/aspects #{:domain/accounts}
   ;; the accounts live in the core banking system
   :aggregate/kept-by :banking.mainframe/mainframe-banking-system}
 
  :banking.domain/create-account-command
- {:atlas/type :ddd/command
-  :atlas/aspects #{:domain/accounts :operation/create}
+ {:atlas/aspects #{:domain/accounts :operation/create}
   :command/targets :banking.domain/account-aggregate
   :command/emits [:banking.domain/account-created-event]}
 
  :banking.domain/perform-transaction-command
- {:atlas/type :ddd/command
-  :atlas/aspects #{:domain/accounts :operation/transact}
+ {:atlas/aspects #{:domain/accounts :operation/transact}
   :command/targets :banking.domain/account-aggregate
   :command/emits [:banking.domain/transaction-performed-event]}
 
  :banking.domain/account-created-event
- {:atlas/type :ddd/domain-event
-  :atlas/aspects #{:domain/accounts :event/account-created}}
+ {:atlas/aspects #{:domain/accounts :event/account-created}}
 
  :banking.domain/transaction-performed-event
- {:atlas/type :ddd/domain-event
-  :atlas/aspects #{:domain/accounts :event/transaction-performed}}
+ {:atlas/aspects #{:domain/accounts :event/transaction-performed}}
 
  :banking.domain/overdraft-policy
- {:atlas/type :ddd/policy
-  :atlas/aspects #{:domain/accounts :policy/overdraft}
+ {:atlas/aspects #{:domain/accounts :policy/overdraft}
   :policy/reacts-to [:banking.domain/transaction-performed-event]}}

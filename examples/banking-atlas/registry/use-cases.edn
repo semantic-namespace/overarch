@@ -4,6 +4,7 @@
  {:atlas/type :atlas/ontology
   :atlas/aspects #{:usecase/use-case}
   :ontology/for :usecase/use-case
+  :ontology/from {:overarch/el :use-case}
   :ontology/keys [:use-case/served-by]}
 
  :type-ref/use-case-served-by
@@ -23,12 +24,10 @@
   :type-ref/cardinality :db.cardinality/many}
 
  :banking.usecases/view-account
- {:atlas/type :usecase/use-case
-  :atlas/aspects #{:domain/accounts :goal/view-account}
+ {:atlas/aspects #{:domain/accounts :goal/view-account}
   :use-case/served-by [:banking.internet-banking.api-application/accounts-summary-controller]}
 
  ;; the model has no endpoint for transfers: none is written here either
  :banking.usecases/make-transaction
- {:atlas/type :usecase/use-case
-  :atlas/aspects #{:domain/accounts :goal/transfer-money}
+ {:atlas/aspects #{:domain/accounts :goal/transfer-money}
   :use-case/issues [:banking.domain/perform-transaction-command]}}
