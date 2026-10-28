@@ -1,0 +1,51 @@
+;; What should hold across the architecture, the domain and the use cases.
+;; Each :invariant/rule is checked by meta-source over the merged entities,
+;; so a rule can use atlas's facts and Overarch's (:overarch/el) together.
+{:banking.invariant/commands-act-and-emit
+ {:atlas/type :atlas/invariant
+  :atlas/aspects #{:meta/commands-act-and-emit}
+  :invariant/severity :error
+  :invariant/rule {:doc "A command targets an aggregate and emits an event"
+                   :severity :error
+                   :when {:= {:atlas/type :ddd/command}}
+                   :require [{:refs {:command/targets {:all {:= {:atlas/type :ddd/aggregate}}}}}
+                             {:refs {:command/emits {:all {:= {:atlas/type :ddd/domain-event}}}}}
+                             {:has [:command/targets :command/emits]}]}}
+
+ :banking.invariant/events-have-a-reaction
+ {:atlas/type :atlas/invariant
+  :atlas/aspects #{:meta/events-have-a-reaction}
+  :invariant/severity :warning
+  :invariant/rule {:doc "Something reacts to every domain event"
+                   :severity :warning
+                   :when {:= {:atlas/type :ddd/domain-event}}
+                   :require [{:referenced-by {:policy/reacts-to {:some {:= {:atlas/type :ddd/policy}}}}}]}}
+
+ :banking.invariant/aggregates-live-in-the-architecture
+ {:atlas/type :atlas/invariant
+  :atlas/aspects #{:meta/aggregates-live-in-the-architecture}
+  :invariant/severity :error
+  :invariant/rule {:doc "An aggregate is kept by a system or container of the architecture model"
+                   :severity :error
+                   :when {:= {:atlas/type :ddd/aggregate}}
+                   :require [{:has :aggregate/kept-by}
+                             {:refs {:aggregate/kept-by {:all {:in {:overarch/el #{:system :container}}}}}}]}}
+
+ :banking.invariant/use-cases-are-served
+ {:atlas/type :atlas/invariant
+  :atlas/aspects #{:meta/use-cases-are-served}
+  :invariant/severity :warning
+  :invariant/rule {:doc "A use case is served by an API endpoint"
+                   :severity :warning
+                   :when {:= {:atlas/type :usecase/use-case}}
+                   :require [{:has :use-case/served-by}
+                             {:refs {:use-case/served-by {:all {:= {:atlas/type :atlas/interface-endpoint}}}}}]}}
+
+ :banking.invariant/tokens-are-checked
+ {:atlas/type :atlas/invariant
+  :atlas/aspects #{:meta/tokens-are-checked}
+  :invariant/severity :warning
+  :invariant/rule {:doc "An endpoint reading the auth token reaches the security component"
+                   :severity :warning
+                   :when {:= {:atlas/type :atlas/interface-endpoint :interface-endpoint/context :auth/token}}
+                   :require [{:reaches {:some {:id :banking.internet-banking.api-application/security-component}}}]}}}

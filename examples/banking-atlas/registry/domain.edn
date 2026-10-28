@@ -1,0 +1,93 @@
+;; The domain model, connected. Overarch's model has the aggregate, the
+;; commands, the events and the policy, and no relation between them; this
+;; says which command acts on which aggregate and emits which event, what
+;; the policy reacts to, and which system keeps the aggregate.
+
+{;; ---- the ontology: what a DDD element must say, and what its relations mean
+ :ddd/aggregate
+ {:atlas/type :atlas/ontology
+  :atlas/aspects #{:ddd/aggregate}
+  :ontology/for :ddd/aggregate
+  :ontology/keys [:aggregate/kept-by]}
+
+ :ddd/command
+ {:atlas/type :atlas/ontology
+  :atlas/aspects #{:ddd/command}
+  :ontology/for :ddd/command
+  :ontology/keys [:command/targets :command/emits]}
+
+ :ddd/domain-event
+ {:atlas/type :atlas/ontology
+  :atlas/aspects #{:ddd/domain-event}
+  :ontology/for :ddd/domain-event
+  :ontology/keys []}
+
+ :ddd/policy
+ {:atlas/type :atlas/ontology
+  :atlas/aspects #{:ddd/policy}
+  :ontology/for :ddd/policy
+  :ontology/keys [:policy/reacts-to]}
+
+ :type-ref/aggregate-kept-by
+ {:atlas/type :atlas/type-ref
+  :atlas/aspects #{:meta/ref-aggregate-kept-by}
+  :type-ref/source :ddd/aggregate
+  :type-ref/property :aggregate/kept-by
+  :type-ref/datalog-verb :entity/depends
+  :type-ref/cardinality :db.cardinality/one}
+
+ :type-ref/command-targets
+ {:atlas/type :atlas/type-ref
+  :atlas/aspects #{:meta/ref-command-targets}
+  :type-ref/source :ddd/command
+  :type-ref/property :command/targets
+  :type-ref/datalog-verb :entity/depends
+  :type-ref/cardinality :db.cardinality/one}
+
+ :type-ref/command-emits
+ {:atlas/type :atlas/type-ref
+  :atlas/aspects #{:meta/ref-command-emits}
+  :type-ref/source :ddd/command
+  :type-ref/property :command/emits
+  :type-ref/datalog-verb :ddd/emits
+  :type-ref/cardinality :db.cardinality/many}
+
+ :type-ref/policy-reacts-to
+ {:atlas/type :atlas/type-ref
+  :atlas/aspects #{:meta/ref-policy-reacts-to}
+  :type-ref/source :ddd/policy
+  :type-ref/property :policy/reacts-to
+  :type-ref/datalog-verb :ddd/reacts-to
+  :type-ref/cardinality :db.cardinality/many}
+
+ ;; ---- Overarch's domain elements, connected
+ :banking.domain/account-aggregate
+ {:atlas/type :ddd/aggregate
+  :atlas/aspects #{:domain/accounts}
+  ;; the accounts live in the core banking system
+  :aggregate/kept-by :banking.mainframe/mainframe-banking-system}
+
+ :banking.domain/create-account-command
+ {:atlas/type :ddd/command
+  :atlas/aspects #{:domain/accounts :operation/create}
+  :command/targets :banking.domain/account-aggregate
+  :command/emits [:banking.domain/account-created-event]}
+
+ :banking.domain/perform-transaction-command
+ {:atlas/type :ddd/command
+  :atlas/aspects #{:domain/accounts :operation/transact}
+  :command/targets :banking.domain/account-aggregate
+  :command/emits [:banking.domain/transaction-performed-event]}
+
+ :banking.domain/account-created-event
+ {:atlas/type :ddd/domain-event
+  :atlas/aspects #{:domain/accounts :event/account-created}}
+
+ :banking.domain/transaction-performed-event
+ {:atlas/type :ddd/domain-event
+  :atlas/aspects #{:domain/accounts :event/transaction-performed}}
+
+ :banking.domain/overdraft-policy
+ {:atlas/type :ddd/policy
+  :atlas/aspects #{:domain/accounts :policy/overdraft}
+  :policy/reacts-to [:banking.domain/transaction-performed-event]}}

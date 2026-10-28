@@ -1,0 +1,10 @@
+;; meta-source on Overarch's banking example: the model as Overarch reads it
+;; (examples/banking, unchanged) and atlas facts on the same ids
+;; (examples/banking-atlas/registry), merged into one entity per id.
+{:src []
+ :registry ["examples/banking-atlas/registry"]
+ :packs {atlas.meta-source/pack {}
+         :overarch {:models ["examples/banking/model.edn" "examples/banking/views.edn"]}}
+ :deps {io.github.semantic-namespace/atlas
+        {:git/url "https://github.com/semantic-namespace/atlas"
+         :git/sha "3275693460b9482ceebd51b39d634a76ce0a8e3e" :deps/root "core"}}}
