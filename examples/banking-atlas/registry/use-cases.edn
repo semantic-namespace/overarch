@@ -1,0 +1,33 @@
+;; The use cases, connected to the architecture and the domain: which
+;; endpoint serves each, and which command it issues.
+{:usecase/use-case
+ {:atlas/type :atlas/ontology
+  :atlas/aspects #{:usecase/use-case}
+  :ontology/for :usecase/use-case
+  :ontology/from {:overarch/el :use-case}
+  :ontology/keys [:use-case/served-by]}
+
+ :type-ref/use-case-served-by
+ {:atlas/type :atlas/type-ref
+  :atlas/aspects #{:meta/ref-use-case-served-by}
+  :type-ref/source :usecase/use-case
+  :type-ref/property :use-case/served-by
+  :type-ref/datalog-verb :entity/depends
+  :type-ref/cardinality :db.cardinality/many}
+
+ :type-ref/use-case-issues
+ {:atlas/type :atlas/type-ref
+  :atlas/aspects #{:meta/ref-use-case-issues}
+  :type-ref/source :usecase/use-case
+  :type-ref/property :use-case/issues
+  :type-ref/datalog-verb :entity/depends
+  :type-ref/cardinality :db.cardinality/many}
+
+ :banking.usecases/view-account
+ {:atlas/aspects #{:domain/accounts :goal/view-account}
+  :use-case/served-by [:banking.internet-banking.api-application/accounts-summary-controller]}
+
+ ;; the model has no endpoint for transfers: none is written here either
+ :banking.usecases/make-transaction
+ {:atlas/aspects #{:domain/accounts :goal/transfer-money}
+  :use-case/issues [:banking.domain/perform-transaction-command]}}

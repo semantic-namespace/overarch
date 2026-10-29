@@ -1,0 +1,59 @@
+# The banking example, with meaning
+
+`examples/banking` is unchanged. `registry/` here adds atlas facts on the
+same ids its model uses, and meta-source reads both and merges them, one
+entity per id: what Overarch says an element is and draws, and what it is
+about, reads, returns and depends on.
+
+- `architecture.edn`: the API application's controllers and components.
+  Each has a type and aspects (`#{:domain/auth :tier/api
+  :capability/sign-in}`); an endpoint says what it reads and returns
+  (`:auth/username :auth/password` → `:auth/token`); each part says what it
+  depends on.
+- `domain.edn`: a small DDD ontology (aggregate, command, domain event,
+  policy: what each must say, and type-refs for what its relations mean),
+  and the model's domain elements connected by it: which command acts on
+  the account aggregate and emits which event, what the overdraft policy
+  reacts to, which system keeps the accounts.
+- `use-cases.edn`: which endpoint serves each use case, and which command
+  it issues.
+- `invariants.edn`: what should hold across the three. Each is checked over
+  the merged entities, so a rule can use atlas's facts and Overarch's
+  together ("an aggregate is kept by a `:system` or `:container`").
+
+In the editor, with meta-source's Emacs mode: one entity per id, the
+invariants, and atlas's compound identity, checked as the EDN is edited.
+
+![The banking example with atlas facts, in Emacs](images/banking-atlas.gif)
+
+## Run it
+
+With [meta-source](https://github.com/semantic-namespace/meta-source)
+(babashka; nothing is loaded). Its Overarch pack isn't released yet, so
+install it from its branch:
+
+```sh
+bbin install io.github.semantic-namespace/meta-source --git/sha 6c3bfbc825dbba319cfa31e05e8bf6af3a35944e
+```
+
+then, from the repository's root, where `meta-source.edn` is:
+
+```sh
+meta-source check --brief
+meta-source where :banking.internet-banking.api-application/sign-in-controller
+meta-source data :auth/token
+```
+
+The check reports three gaps in the example:
+
+- nothing reacts to `:banking.domain/account-created-event`;
+- `accounts-summary-controller` reads the auth token and declares no
+  dependency, direct or through what it depends on, on the security
+  component: nothing it declares checks the token. (atlas's effective
+  dependencies, which follow data too, do reach it, through the sign-in
+  controller that produces the token.)
+- the "transfer money" use case is served by no API endpoint: the model has
+  none for transfers.
+
+and, as info, the relations these facts state that the model doesn't draw
+(its domain elements have none).

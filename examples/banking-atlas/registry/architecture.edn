@@ -1,0 +1,51 @@
+;; What the API application's parts mean, on the ids Overarch's model gives
+;; them (examples/banking/model.edn). Overarch says what each part is and
+;; draws its arrows; this says what each part is about (its aspects), what
+;; an endpoint reads and returns, and what each part depends on.
+{:banking.internet-banking.api-application/sign-in-controller
+ {:atlas/type :atlas/interface-endpoint
+  :atlas/aspects #{:domain/auth :tier/api :capability/sign-in}
+  :interface-endpoint/context [:auth/username :auth/password]
+  :interface-endpoint/response [:auth/token]
+  :interface-endpoint/deps #{:banking.internet-banking.api-application/security-component}}
+
+ :banking.internet-banking.api-application/reset-password-controller
+ {:atlas/type :atlas/interface-endpoint
+  :atlas/aspects #{:domain/auth :tier/api :capability/reset-password}
+  :interface-endpoint/context [:customer/email]
+  :interface-endpoint/response [:auth/reset-link-sent]
+  :interface-endpoint/deps #{:banking.internet-banking.api-application/email-component}}
+
+ :banking.internet-banking.api-application/accounts-summary-controller
+ {:atlas/type :atlas/interface-endpoint
+  :atlas/aspects #{:domain/accounts :tier/api :capability/accounts-summary}
+  :interface-endpoint/context [:auth/token]
+  :interface-endpoint/response [:account/summary]
+  :interface-endpoint/deps #{:banking.internet-banking.api-application/mainframe-banking-system-facade}}
+
+ :banking.internet-banking.api-application/security-component
+ {:atlas/type :atlas/structure-component
+  :atlas/aspects #{:domain/auth :tier/foundation :protocol/credential-check}
+  :structure-component/deps #{:banking.internet-banking/database}}
+
+ :banking.internet-banking.api-application/email-component
+ {:atlas/type :atlas/structure-component
+  :atlas/aspects #{:domain/notifications :tier/foundation :protocol/email}
+  :structure-component/deps #{:banking.email/email-system}}
+
+ :banking.internet-banking.api-application/mainframe-banking-system-facade
+ {:atlas/type :atlas/structure-component
+  :atlas/aspects #{:domain/accounts :tier/foundation :protocol/mainframe-api}
+  :structure-component/deps #{:banking.mainframe/mainframe-banking-system}}
+
+ :banking.internet-banking/database
+ {:atlas/type :atlas/structure-component
+  :atlas/aspects #{:domain/auth :tier/foundation :protocol/credential-storage}}
+
+ :banking.email/email-system
+ {:atlas/type :atlas/structure-component
+  :atlas/aspects #{:domain/notifications :tier/foundation :integration/external :protocol/smtp}}
+
+ :banking.mainframe/mainframe-banking-system
+ {:atlas/type :atlas/structure-component
+  :atlas/aspects #{:domain/accounts :tier/foundation :integration/external :protocol/core-banking}}}
